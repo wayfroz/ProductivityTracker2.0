@@ -35,4 +35,11 @@ export class HomePage {
     { day: 'Tuesday', task: 'Team meeting at 10 AM' },
     { day: 'Wednesday', task: 'Review code submissions' }
   ];
+
+  addTask(){
+    const taskText = prompt("Add a new task:");
+    if(taskText){
+      this.tasks.push({day: 'New Task', task: taskText});
+    }
+  }
 }
