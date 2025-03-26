@@ -2,6 +2,13 @@
 
 A full-stack application for managing tasks and reminders, built with FastAPI (Python) backend and Angular frontend.
 
+## Security Notice (For Educational Purposes Only)
+   ⚠️ This implementation contains intentional security shortcomings for academic demonstration:  
+   - Passwords stored in plaintext  
+   - No HTTPS enforcement  
+   - Simplified authentication  
+   **DO NOT USE IN PRODUCTION**
+
 ## Features
 - User authentication (Signup/Login)
 - Task creation with due dates
