@@ -1,0 +1,62 @@
+<!-- calendar.component.html -->
+<div class="calendar-wrapper">
+    <div class="calendar-header">
+
+        <mat-button-toggle-group [(ngModel)]="viewMode" aria-label="View Mode Toggle">
+            <mat-button-toggle value="month">Month View</mat-button-toggle>
+            <mat-button-toggle value="week">Week View</mat-button-toggle>
+        </mat-button-toggle-group>
+     
+      <div class="month-nav">
+        <button mat-icon-button (click)="previousPeriod()">
+          <mat-icon>chevron_left</mat-icon>
+        </button>
+        <h2>{{ getHeaderTitle() }}</h2>
+        <button mat-icon-button (click)="nextPeriod()">
+          <mat-icon>chevron_right</mat-icon>
+        </button>
+      </div>
+
+      <div class="calendar-actions">
+        <button mat-raised-button color="primary" (click)="addTask()">Add Task</button>
+      </div>
+      
+    </div>
+  
+    <div *ngIf="viewMode === 'month'" class="calendar-grid">
+        <div class="day-name" *ngFor="let day of dayNames">{{ day }}</div>
+        <ng-container *ngFor="let day of calendarDays">
+          <div
+            class="calendar-day"
+            [class.today]="day.date && isToday(day.date)"
+            [class.placeholder]="day.display === null"
+          >
+            <div class="day-content">
+              <span class="date-number" *ngIf="day.display !== null">{{ day.display }}</span>
+              <ul class="task-list" *ngIf="day.display !== null">
+                <li *ngFor="let task of getTasksForDate(day.date)">{{ task }}</li>
+              </ul>
+            </div>
+          </div>
+        </ng-container>
+      </div>
+    
+  
+      <div *ngIf="viewMode === 'week'" class="calendar-grid">
+        <div class="day-name" *ngFor="let day of currentWeekDays">{{ day.label }}</div>
+        <div
+          class="calendar-day"
+          *ngFor="let day of currentWeekDays"
+          [class.today]="isToday(day.date)"
+        >
+          <div class="day-content">
+            <span class="date-number">{{ day.date | date: 'd' }}</span>
+            <ul class="task-list">
+              <li *ngFor="let task of getTasksForDate(day.date)">{{ task }}</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    
+  </div>
+  

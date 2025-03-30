@@ -1,0 +1,31 @@
+.dashboard-wrapper {
+  .icon-links {
+    display: block;
+    .app-icon {
+      text-align: center;
+      text-decoration: none;
+      color: #333;
+      width: 120px;
+    
+      img {
+        width: 64px;
+        height: 64px;
+        margin-bottom: 0.5rem;
+        transition: transform 0.2s ease;
+      }
+    
+      span {
+        font-size: 0.9rem;
+        display: block;
+        margin-top: 0.25rem;
+      }
+    
+      &:hover img {
+        transform: scale(1.1);
+      }
+    }
+  }
+}
+
+
+
