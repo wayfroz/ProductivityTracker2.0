@@ -1,0 +1,18 @@
+<div class="tasks-container">
+    <h1>Tasks</h1>
+  
+    <form (submit)="addTask()">
+      <input type="text" [(ngModel)]="taskTitle" placeholder="Task Title" required />
+      <textarea [(ngModel)]="taskDescription" placeholder="Task Description"></textarea>
+      <input type="date" [(ngModel)]="taskDate">
+      <button mat-button (click)="addTask()">Add Task</button>
+    </form>
+  
+    <ul>
+      <li *ngFor="let task of tasks">
+        <h3>{{ task.title }}</h3>
+        <p>{{ task.description }}</p>
+      </li>
+    </ul>
+  </div>
+  
