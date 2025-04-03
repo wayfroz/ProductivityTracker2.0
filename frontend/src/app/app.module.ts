@@ -12,7 +12,7 @@ import { AppRoutingModule } from './app.routes';
 import { CalendarComponent } from './calendar/calendar.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { SettingsComponent } from './settings/settings.component';
-import { TasksComponent } from './tasks/tasks.component';
+import { TasksComponent } from './Tasks/Tasks.component';
 
 @NgModule({
   declarations: [

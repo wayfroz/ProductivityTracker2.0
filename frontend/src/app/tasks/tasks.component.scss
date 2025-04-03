@@ -1,25 +1,45 @@
-.tasks-container {
-    max-width: 600px;
-    margin: auto;
+.tasks-wrapper{
+    display: flex;
+    justify-content: center;
     padding: 20px;
-  }
-  
-  input, textarea {
-    display: block;
+}
+.tasks-header{
     width: 100%;
+    max-width: 700px;
+}
+.tasks-form-container{
+    background-color: rgb(169, 214, 236);
+    padding: 20px;
+    border-radius: 20px;
+}
+h2{
+    text-align: center;
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+lable{
+    font-weight: bold;
+    margin-top: 10px;
+    display: block;
+}
+input, textarea{
+    width:  100%;
+    padding: 10px;
     margin-bottom: 10px;
-    padding: 8px;
-  }
-  
-  button {
-    padding: 8px 12px;
-    background-color: #007bff;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+button{
+    width: 100%;
+    padding: 10px;
+    background-color: lavender;
     color: white;
     border: none;
+    border-radius: 4px;
     cursor: pointer;
-  }
-  
-  button:hover {
-    background-color: #0056b3;
-  }
-  
+    font-size: 16px;
+}
+button:disabled{
+    background-color: #ccc;
+    cursor: not-allowed;
+}

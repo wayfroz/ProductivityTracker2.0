@@ -1,18 +1,20 @@
-<div class="tasks-container">
-    <h1>Tasks</h1>
-  
-    <form (submit)="addTask()">
-      <input type="text" [(ngModel)]="taskTitle" placeholder="Task Title" required />
-      <textarea [(ngModel)]="taskDescription" placeholder="Task Description"></textarea>
-      <input type="date" [(ngModel)]="taskDate">
-      <button mat-button (click)="addTask()">Add Task</button>
-    </form>
-  
-    <ul>
-      <li *ngFor="let task of tasks">
-        <h3>{{ task.title }}</h3>
-        <p>{{ task.description }}</p>
-      </li>
-    </ul>
-  </div>
-  
+<div class="tasks-wrapper">
+    <div class="tasks-header">
+        <div class="tasks-form-container">
+            <h2>Add a Task</h2>
+            <form (ngSubmit)="onSubmit()" #taskForm="ngForm">
+                
+                <label for="title">Title:</label>
+                <input type="text" id="title" name="title" [(ngModel)]="tasks.title" required>
+
+                <label for="description">Description:</label>
+                <textarea id="description" name="description" [(ngModel)]="tasks.description"></textarea>
+
+                <label for="date">Date:</label>
+                <input type="date" id="date" name="date" [(ngModel)]="tasks.date" required>
+
+                <button type="submit" [disabled]="!taskForm.form.valid">Add Task</button>
+            </form>
+        </div>
+    </div>
+</div>
