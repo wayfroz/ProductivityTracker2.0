@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatIconModule } from '@angular/material/icon';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-calendar',
@@ -19,6 +20,7 @@ import { MatIconModule } from '@angular/material/icon';
   styleUrls: ['./calendar.component.scss']
 })
 export class CalendarComponent implements OnInit {
+  constructor(private router: Router) {}
   currentDate = new Date();
   currentMonth = this.currentDate.getMonth();
   currentYear = this.currentDate.getFullYear();
@@ -158,4 +160,8 @@ export class CalendarComponent implements OnInit {
       .map(task => task.task);
   }
   
+  goToTasks() {
+    this.router.navigate(['/Tasks']);  // This will navigate to the Tasks component
+  }
+
 }
