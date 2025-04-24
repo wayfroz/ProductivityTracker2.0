@@ -5,20 +5,25 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
 import { MatButtonModule } from '@angular/material/button';
-import { MatCardModule } from '@angular/material/card';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { FormsModule } from '@angular/forms';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app.routes';
 import { CalendarComponent } from './calendar/calendar.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { SettingsComponent } from './settings/settings.component';
+import { TaskModalComponent } from './task-modal/task-modal.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     CalendarComponent,
     DashboardComponent,
-    SettingsComponent
+    SettingsComponent,
+    TaskModalComponent
   ],
   imports: [
     BrowserModule,
@@ -28,7 +33,10 @@ import { SettingsComponent } from './settings/settings.component';
     MatSidenavModule,
     MatListModule,
     MatButtonModule,
-    MatCardModule
+    MatDialogModule,
+    MatFormFieldModule,
+    MatInputModule,
+    FormsModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -1,0 +1,28 @@
+<h2 mat-dialog-title>Add New Task</h2>
+
+<mat-dialog-content>
+  <mat-form-field appearance="fill">
+    <mat-label>Title</mat-label>
+    <input matInput [(ngModel)]="title" required />
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Description</mat-label>
+    <textarea matInput [(ngModel)]="description"></textarea>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Date</mat-label>
+    <input matInput [(ngModel)]="date" type="date" required />
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Time</mat-label>
+    <input matInput [(ngModel)]="time" type="time" required />
+  </mat-form-field>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <button mat-raised-button color="primary" (click)="closeModal()">Cancel</button>
+  <button mat-raised-button color="primary" (click)="saveTask()">Save</button>
+</mat-dialog-actions>

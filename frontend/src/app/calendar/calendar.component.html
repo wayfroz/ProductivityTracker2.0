@@ -33,9 +33,14 @@
           >
             <div class="day-content">
               <span class="date-number" *ngIf="day.display !== null">{{ day.display }}</span>
-              <ul class="task-list" *ngIf="day.display !== null">
-                <li *ngFor="let task of getTasksForDate(day.date)">{{ task }}</li>
-              </ul>
+              <ng-container *ngIf="day.date">
+                <ul class="task-list" *ngIf="day.display !== null">
+                  <li *ngFor="let task of getTasksForDate(day.date); let i = index" 
+                      (click)="onTaskClick(day.date!, task, i)">
+                    {{ task }}
+                  </li>
+                </ul>
+              </ng-container>
             </div>
           </div>
         </ng-container>
@@ -52,8 +57,11 @@
           <div class="day-content">
             <span class="date-number">{{ day.date | date: 'd' }}</span>
             <ul class="task-list">
-              <li *ngFor="let task of getTasksForDate(day.date)">{{ task }}</li>
-            </ul>
+            <li *ngFor="let task of getTasksForDate(day.date); let i = index"
+                (click)="onTaskClick(day.date, task, i)">
+              {{ task }}
+            </li>
+          </ul>
           </div>
         </div>
       </div>
