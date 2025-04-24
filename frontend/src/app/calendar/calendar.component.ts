@@ -4,6 +4,10 @@ import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatIconModule } from '@angular/material/icon';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
+import { TaskModalComponent } from '../task-modal/task-modal.component';
+import { TaskService } from '../services/task.service';
 
 @Component({
   selector: 'app-calendar',
@@ -13,12 +17,16 @@ import { MatIconModule } from '@angular/material/icon';
     FormsModule,
     MatButtonToggleModule,
     MatIconModule,
-    MatButtonModule
+    MatButtonModule,
+    MatDialogModule,
   ],
+  
+  providers: [TaskService],
   templateUrl: './calendar.component.html',
   styleUrls: ['./calendar.component.scss']
 })
 export class CalendarComponent implements OnInit {
+  constructor(private dialog: MatDialog, private taskService: TaskService) {} 
   currentDate = new Date();
   currentMonth = this.currentDate.getMonth();
   currentYear = this.currentDate.getFullYear();
@@ -41,6 +49,7 @@ export class CalendarComponent implements OnInit {
   
 
   ngOnInit() {
+    this.loadTasks();
     this.generateCalendar();
     this.generateCurrentWeek();
   }
@@ -141,14 +150,33 @@ export class CalendarComponent implements OnInit {
     );
   }
 
-  addTask() {
-    const day = prompt("Enter the day of the month for the task:");
-    const taskText = prompt("Enter the task:");
-    const dayNum = Number(day);
-    if (dayNum && taskText) {
-      const taskDate = new Date(this.currentYear, this.currentMonth, dayNum);
-      this.tasks.push({ date: taskDate, task: taskText });
-    }
+  openTaskModal() {
+    const dialogRef = this.dialog.open(TaskModalComponent, {
+      width: '400px',
+      data: {
+        title: '',
+        description: ''
+      }
+    });
+  
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.tasks.push(result);
+        this.generateCalendar();
+      }
+    });
+  }
+
+  loadTasks() {
+    this.taskService.getTasksByStudent(1).subscribe(
+      (data) => {
+        this.tasks = data;
+        console.log('Fetched tasks:', data);
+      },
+      (error) => {
+        console.error('Failed to fetch tasks:', error);
+      }
+    );
   }
   
   getTasksForDate(date: Date | null): string[] {

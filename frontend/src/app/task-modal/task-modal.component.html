@@ -1,0 +1,40 @@
+<div class="task-modal">
+  <h2>New Task</h2>
+  <form (ngSubmit)="saveTask()" #taskForm="ngForm">
+    <mat-form-field appearance="fill">
+      <mat-label>Title</mat-label>
+      <input matInput [(ngModel)]="taskTitle" name="title" required>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Description</mat-label>
+      <textarea matInput rows="4" [(ngModel)]="taskDescription" name="description"></textarea>
+    </mat-form-field>
+
+    <!-- Due Date -->
+    <mat-form-field appearance="fill">
+      <mat-label>Due Date</mat-label>
+      <input matInput [matDatepicker]="picker" [(ngModel)]="dueDateOnly" name="dueDate" required placeholder="YYYY-MM-DD">
+      <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+
+    <!-- Due Time -->
+    <mat-form-field appearance="fill">
+      <mat-label>Due Time</mat-label>
+      <input matInput [(ngModel)]="dueTimeOnly" name="dueTime" required placeholder="HH:mm:ss">
+    </mat-form-field>
+
+    <!-- Student ID -->
+    <mat-form-field appearance="fill">
+      <mat-label>Student ID</mat-label>
+      <input matInput [(ngModel)]="studentId" name="studentId" required>
+    </mat-form-field>
+
+    <div class="actions">
+      <button mat-stroked-button color="warn" type="button" (click)="close()">Cancel</button>
+      <button mat-raised-button color="primary" type="submit">Save</button>
+    </div>
+  </form>
+</div>
+
+  
