@@ -35,7 +35,7 @@ A full-stack application for managing tasks and reminders, built with FastAPI (P
            FLUSH PRIVILEGES;
 	   EXIT;
 
-3. Backend Setup
+3. Backend Setup3
 	a. cd backend
 	b. cp .env.example .env  # Update credentials in .env
 	c. python -m venv venv
