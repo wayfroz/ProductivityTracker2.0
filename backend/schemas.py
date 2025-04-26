@@ -18,6 +18,11 @@ class TaskCreateRequest(BaseModel):
     due_date: datetime
     student_id: int
 
+# Task update schema
+class TaskUpdateRequest(BaseModel):
+    title: str
+    due_date: datetime
+
 # Reminder creation schema
 class ReminderCreateRequest(BaseModel):
     reminder_time: datetime

@@ -1,15 +1,16 @@
-<div *ngIf="showNavbar">
-  <div style="gap: 8px">
-    <div style="display: flex; justify-content: center; align-items: center; gap: 8px">
-      <span style="font-size: 24px; font-weight: bold;">Productivity Tracker</span>
-    </div>
+<div *ngIf="showNavbar" class="navbar-wrapper">
+  <div class="navbar-left">
+    <span class="navbar-title">Productivity Tracker</span>
+  </div>
 
-    <div style="display: flex; justify-content: center; align-items: center; margin-top: 10px; gap: 20px;">
-      <a routerLink="/calendar">Calendar</a>
-      <a routerLink="/dashboard">Dashboard</a>
-      <a routerLink="/tasks">Tasks</a>
-      <button mat-button color="warn" (click)="logout()">Logout</button>
-    </div>
+  <div class="navbar-center">
+    <a routerLink="/calendar" routerLinkActive="active-link">Calendar</a>
+    <a routerLink="/dashboard" routerLinkActive="active-link">Dashboard</a>
+    <a routerLink="/tasks" routerLinkActive="active-link">Tasks</a>
+  </div>
+
+  <div class="navbar-right">
+    <button mat-button (click)="logout()">Logout</button>
   </div>
 </div>
 

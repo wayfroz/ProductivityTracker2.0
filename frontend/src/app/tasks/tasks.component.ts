@@ -12,13 +12,12 @@ import { CommonModule } from '@angular/common';
     FormsModule,
   ],
   templateUrl: './tasks.component.html',
-  styleUrls: ['./tasks.component.css']
+  styleUrls: ['./tasks.component.scss']
 })
 
 export class TasksComponent {
   tasks = {
     title: '',
-    description: '',
     date: '',
     student_id: 1 // Replace with real auth ID later
   };

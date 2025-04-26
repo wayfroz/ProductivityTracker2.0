@@ -171,7 +171,6 @@ export class CalendarComponent implements OnInit {
     const dialogRef = this.dialog.open(TaskModalComponent, {
       data: existingTask ? {
         title: existingTask.task,
-        description: '',
         date: existingTask.date.toISOString().split('T')[0],
         time: existingTask.date.toTimeString().slice(0, 5),
       } : null
@@ -192,12 +191,43 @@ export class CalendarComponent implements OnInit {
     });
   }
 
+  
   onTaskClick(date: Date, taskTitle: string, index: number) {
-    const matchingIndex = this.tasks.findIndex(t =>
-      t.date.toDateString() === date.toDateString() && t.task === taskTitle
-    );
-    if (matchingIndex !== -1) {
-      this.addTask(this.tasks[matchingIndex], matchingIndex);
+    const matchingTask = this.allTasks.find(t => {
+      const taskDate = new Date(t.due_date);
+      return (
+        taskDate.getFullYear() === date.getFullYear() &&
+        taskDate.getMonth() === date.getMonth() &&
+        taskDate.getDate() === date.getDate() &&
+        t.title === taskTitle
+      );
+    });
+  
+    if (matchingTask) {
+      const dialogRef = this.dialog.open(TaskModalComponent, {
+        data: {
+          id: matchingTask.id,
+          title: matchingTask.title,
+          due_date: matchingTask.due_date
+        }
+      });
+  
+      dialogRef.afterClosed().subscribe((updatedData) => {
+        if (updatedData) {
+          this.updateTask(updatedData);
+        }
+      });
     }
   }
+  
+
+  updateTask(updatedTask: any) {
+    this.http.put(`http://localhost:8000/tasks/${updatedTask.id}`, {
+      title: updatedTask.title,
+      due_date: updatedTask.date // must send the correct key names matching backend
+    }).subscribe(() => {
+      console.log('Task updated successfully');
+      this.fetchTasks(); // Reload tasks after updating
+    });
+  }  
 }
