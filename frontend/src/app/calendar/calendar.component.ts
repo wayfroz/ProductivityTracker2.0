@@ -4,7 +4,8 @@ import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatIconModule } from '@angular/material/icon';
-import { Router } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
+import { TaskModalComponent } from '../task-modal/task-modal.component';
 
 @Component({
   selector: 'app-calendar',
@@ -20,7 +21,8 @@ import { Router } from '@angular/router';
   styleUrls: ['./calendar.component.scss']
 })
 export class CalendarComponent implements OnInit {
-  constructor(private router: Router) {}
+  tasks: { date: Date; task: string }[] = [];
+  constructor(private dialog: MatDialog) {}
   currentDate = new Date();
   currentMonth = this.currentDate.getMonth();
   currentYear = this.currentDate.getFullYear();
@@ -35,11 +37,6 @@ export class CalendarComponent implements OnInit {
   calendarDays: { date: Date | null; display: number | null }[] = [];
   currentWeekDays: { date: Date; label: string }[] = [];
 
-  tasks = [
-    { date: new Date(this.currentYear, this.currentMonth, 4), task: 'Complete project report' },
-    { date: new Date(this.currentYear, this.currentMonth, 5), task: 'Team meeting at 10 AM' },
-    { date: new Date(this.currentYear, this.currentMonth, 6), task: 'Review code submissions' }
-  ];
   
 
   ngOnInit() {
@@ -142,15 +139,29 @@ export class CalendarComponent implements OnInit {
       date.getFullYear() === today.getFullYear()
     );
   }
-
-  addTask() {
-    const day = prompt("Enter the day of the month for the task:");
-    const taskText = prompt("Enter the task:");
-    const dayNum = Number(day);
-    if (dayNum && taskText) {
-      const taskDate = new Date(this.currentYear, this.currentMonth, dayNum);
-      this.tasks.push({ date: taskDate, task: taskText });
-    }
+  addTask(existingTask?: { date: Date; task: string }, index?: number) {
+    const dialogRef = this.dialog.open(TaskModalComponent, {
+      data: existingTask ? {
+        title: existingTask.task,
+        description: '', // Optional: add if you're storing descriptions
+        date: existingTask.date.toISOString().split('T')[0],
+        time: existingTask.date.toTimeString().slice(0, 5),
+      } : null
+    });
+  
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        const newTask = {
+          date: result.date,
+          task: result.title,
+        };
+        if (index !== undefined) {
+          this.tasks[index] = newTask;
+        } else {
+          this.tasks.push(newTask);
+        }
+      }
+    });
   }
   
   getTasksForDate(date: Date | null): string[] {
@@ -159,4 +170,12 @@ export class CalendarComponent implements OnInit {
       .filter(task => task.date.toDateString() === date.toDateString())
       .map(task => task.task);
   }
+  onTaskClick(date: Date, taskTitle: string, index: number) {
+    const matchingIndex = this.tasks.findIndex(t => 
+      t.date.toDateString() === date.toDateString() && t.task === taskTitle
+    );
+    if (matchingIndex !== -1) {
+      this.addTask(this.tasks[matchingIndex], matchingIndex);
+    }
+  }  
 }
