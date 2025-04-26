@@ -9,7 +9,7 @@ import { CommonModule } from '@angular/common';
   
   ],
   templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.css']
+  styleUrls: ['./dashboard.component.scss']
 })
 export class DashboardComponent {
   displayedColumns: string[] = ['day', 'task'];

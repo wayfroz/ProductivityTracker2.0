@@ -159,9 +159,4 @@ export class CalendarComponent implements OnInit {
       .filter(task => task.date.toDateString() === date.toDateString())
       .map(task => task.task);
   }
-  
-  goToTasks() {
-    this.router.navigate(['/Tasks']);  // This will navigate to the Tasks component
-  }
-
 }
