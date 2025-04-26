@@ -1,12 +1,17 @@
-<mat-toolbar color="primary">
-  <span class="toolbar-title">Productivity Tracker</span>
-</mat-toolbar>
+<div *ngIf="showNavbar" class="navbar-wrapper">
+  <div class="navbar-left">
+    <span class="navbar-title">Productivity Tracker</span>
+  </div>
 
-<div class="nav-links">
-  <a mat-button routerLink="/calendar">Calendar</a>
-  <a mat-button routerLink="/dashboard">Dashboard</a>
+  <div class="navbar-center">
+    <a routerLink="/calendar" routerLinkActive="active-link">Calendar</a>
+    <a routerLink="/dashboard" routerLinkActive="active-link">Dashboard</a>
+    <a routerLink="/tasks" routerLinkActive="active-link">Tasks</a>
+  </div>
+
+  <div class="navbar-right">
+    <button mat-button (click)="logout()">Logout</button>
+  </div>
 </div>
 
-<div class="main-content">
-  <router-outlet></router-outlet>
-</div>
+<router-outlet></router-outlet>

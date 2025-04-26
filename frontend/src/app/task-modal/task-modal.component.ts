@@ -3,6 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MatInputModule } from '@angular/material/input';
 import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatButtonModule } from '@angular/material/button'; // Correct import
 
 @Component({
   selector: 'app-task-modal',
@@ -11,28 +12,37 @@ import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/materia
     CommonModule,    
     FormsModule, 
     MatInputModule,
-    MatDialogModule
+    MatDialogModule,
+    MatButtonModule 
   ],
   templateUrl: './task-modal.component.html',
   styleUrls: ['./task-modal.component.scss']
 })
 export class TaskModalComponent {
   title: string = '';
-  description: string = '';
   date: string = '';
-  time: string = '';
-  
 
-  constructor(public dialogRef: MatDialogRef<TaskModalComponent>,@Inject(MAT_DIALOG_DATA) public data: any) {}
+  constructor(
+    public dialogRef: MatDialogRef<TaskModalComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: any
+  ) {}
+
+  ngOnInit() {
+    if (this.data) {
+      this.title = this.data.title || '';
+      this.date = this.data.due_date ? new Date(this.data.due_date).toISOString().substring(0, 10) : '';
+    }
+  }
 
   saveTask() {
     const task = {
       title: this.title,
-      description: this.description,
-      date: new Date(this.date + ' ' + this.time),
+      date: new Date(this.date),
+      id: this.data?.id // Keep the ID so we know what to update
     };
     this.dialogRef.close(task);
   }
+  
 
   closeModal() {
     this.dialogRef.close();

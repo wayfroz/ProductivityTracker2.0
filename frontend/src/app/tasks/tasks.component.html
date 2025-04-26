@@ -1,0 +1,22 @@
+<div class="task-form-container">
+    <h2>Add a New Task</h2>
+  
+    <form (ngSubmit)="onSubmit()" class="task-form">
+      <div class="form-group">
+        <label for="title">Title</label>
+        <input id="title" name="title" [(ngModel)]="tasks.title" required placeholder="Enter your task title">
+      </div>
+  
+      <div class="form-group">
+        <label for="date">Date</label>
+        <input id="date" name="date" type="date" [(ngModel)]="tasks.date" required>
+      </div>
+    
+      <div style="margin-left: 16px" >
+        <button mat-raised-button color="primary" type="submit" [disabled]="!tasks.title || !tasks.date">
+            Add Task
+          </button>
+      </div>
+    </form>
+  </div>
+  

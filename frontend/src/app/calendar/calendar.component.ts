@@ -6,6 +6,8 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialog } from '@angular/material/dialog';
 import { TaskModalComponent } from '../task-modal/task-modal.component';
+import { RouterLink } from '@angular/router';
+import { HttpClient, provideHttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-calendar',
@@ -15,33 +17,38 @@ import { TaskModalComponent } from '../task-modal/task-modal.component';
     FormsModule,
     MatButtonToggleModule,
     MatIconModule,
-    MatButtonModule
+    MatButtonModule,
+    RouterLink
   ],
   templateUrl: './calendar.component.html',
   styleUrls: ['./calendar.component.scss']
 })
+
 export class CalendarComponent implements OnInit {
+  allTasks: any[] = [];
   tasks: { date: Date; task: string }[] = [];
-  constructor(private dialog: MatDialog) {}
+
+  constructor(
+    private dialog: MatDialog,
+    private http: HttpClient
+  ) {}
+
   currentDate = new Date();
   currentMonth = this.currentDate.getMonth();
   currentYear = this.currentDate.getFullYear();
   viewMode: 'month' | 'week' = 'month';
-
   dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
   monthNames = [
     'January', 'February', 'March', 'April', 'May', 'June',
     'July', 'August', 'September', 'October', 'November', 'December'
   ];
-
   calendarDays: { date: Date | null; display: number | null }[] = [];
   currentWeekDays: { date: Date; label: string }[] = [];
-
-  
 
   ngOnInit() {
     this.generateCalendar();
     this.generateCurrentWeek();
+    this.fetchTasks();
   }
 
   previousPeriod() {
@@ -77,23 +84,20 @@ export class CalendarComponent implements OnInit {
 
   generateCalendar() {
     const firstDayOfMonth = new Date(this.currentYear, this.currentMonth, 1);
-    const startingDayOfWeek = firstDayOfMonth.getDay(); // 0 = Sunday, 6 = Saturday
+    const startingDayOfWeek = firstDayOfMonth.getDay();
     const daysInMonth = new Date(this.currentYear, this.currentMonth + 1, 0).getDate();
-  
+
     this.calendarDays = [];
-  
-    // Add empty placeholders until the first actual day aligns correctly
+
     for (let i = 0; i < startingDayOfWeek; i++) {
       this.calendarDays.push({ date: null, display: null });
     }
-  
-    // Add real days of the month
+
     for (let day = 1; day <= daysInMonth; day++) {
       const date = new Date(this.currentYear, this.currentMonth, day);
       this.calendarDays.push({ date, display: day });
     }
   }
-  
 
   generateCurrentWeek() {
     const current = new Date(this.currentDate);
@@ -139,16 +143,39 @@ export class CalendarComponent implements OnInit {
       date.getFullYear() === today.getFullYear()
     );
   }
+
+  fetchTasks() {
+    this.http.get<any[]>('http://localhost:8000/tasks/student/1')
+      .subscribe(tasks => {
+        this.allTasks = tasks;
+      });
+  }
+
+  getTasksForDate(date: Date | null): string[] {
+    if (!date) return [];
+  
+    return this.allTasks
+      .filter(task => {
+        const taskDate = new Date(task.due_date);
+        return (
+          taskDate.getFullYear() === date.getFullYear() &&
+          taskDate.getMonth() === date.getMonth() &&
+          taskDate.getDate() === date.getDate()
+        );
+      })
+      .map(task => task.title);
+  }
+  
+
   addTask(existingTask?: { date: Date; task: string }, index?: number) {
     const dialogRef = this.dialog.open(TaskModalComponent, {
       data: existingTask ? {
         title: existingTask.task,
-        description: '', // Optional: add if you're storing descriptions
         date: existingTask.date.toISOString().split('T')[0],
         time: existingTask.date.toTimeString().slice(0, 5),
       } : null
     });
-  
+
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
         const newTask = {
@@ -163,19 +190,44 @@ export class CalendarComponent implements OnInit {
       }
     });
   }
+
   
-  getTasksForDate(date: Date | null): string[] {
-    if (!date) return [];
-    return this.tasks
-      .filter(task => task.date.toDateString() === date.toDateString())
-      .map(task => task.task);
-  }
   onTaskClick(date: Date, taskTitle: string, index: number) {
-    const matchingIndex = this.tasks.findIndex(t => 
-      t.date.toDateString() === date.toDateString() && t.task === taskTitle
-    );
-    if (matchingIndex !== -1) {
-      this.addTask(this.tasks[matchingIndex], matchingIndex);
+    const matchingTask = this.allTasks.find(t => {
+      const taskDate = new Date(t.due_date);
+      return (
+        taskDate.getFullYear() === date.getFullYear() &&
+        taskDate.getMonth() === date.getMonth() &&
+        taskDate.getDate() === date.getDate() &&
+        t.title === taskTitle
+      );
+    });
+  
+    if (matchingTask) {
+      const dialogRef = this.dialog.open(TaskModalComponent, {
+        data: {
+          id: matchingTask.id,
+          title: matchingTask.title,
+          due_date: matchingTask.due_date
+        }
+      });
+  
+      dialogRef.afterClosed().subscribe((updatedData) => {
+        if (updatedData) {
+          this.updateTask(updatedData);
+        }
+      });
     }
+  }
+  
+
+  updateTask(updatedTask: any) {
+    this.http.put(`http://localhost:8000/tasks/${updatedTask.id}`, {
+      title: updatedTask.title,
+      due_date: updatedTask.date // must send the correct key names matching backend
+    }).subscribe(() => {
+      console.log('Task updated successfully');
+      this.fetchTasks(); // Reload tasks after updating
+    });
   }  
 }
