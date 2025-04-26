@@ -9,27 +9,24 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
-
+import { provideHttpClient } from '@angular/common/http'; 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app.routes';
 import { CalendarComponent } from './calendar/calendar.component';
-import { DashboardComponent } from './dashboard/dashboard.component';
-import { SettingsComponent } from './settings/settings.component';
 import { TaskModalComponent } from './task-modal/task-modal.component';
+import { DashboardComponent } from './home-page/dashboard.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     CalendarComponent,
     DashboardComponent,
-    SettingsComponent,
     TaskModalComponent
   ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
     AppRoutingModule,
-    RouterModule,
     MatToolbarModule,
     MatSidenavModule,
     MatListModule,
@@ -39,7 +36,7 @@ import { TaskModalComponent } from './task-modal/task-modal.component';
     MatInputModule,
     FormsModule,
   ],
-  providers: [],
+  providers: [provideHttpClient()],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
