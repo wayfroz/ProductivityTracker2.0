@@ -1,24 +1,44 @@
 <div class="login-container">
-    <h2>Welcome to Productivity Tracker</h2>
-    <h3>Log in here</h3>
-    <form (ngSubmit)="onSubmit()" class="login-form">
-      <div class="form-group">
-        <label for="username">Username</label>
-        <input id="username" [(ngModel)]="username" name="username" placeholder="Enter username" required>
-      </div>
-  
-      <div class="form-group">
-        <label for="password">Password</label>
-        <input id="password" type="password" [(ngModel)]="password" name="password" placeholder="Enter password" required>
-      </div>
-  
-      <div style="padding: 12px">
-        <button mat-raised-button color="primary" type="submit">Log In</button>
-      </div>
-  
-      <div *ngIf="loginFailed" class="error-message">
-        Incorrect credentials. Try again.
-      </div>
-    </form>
-  </div>
-  
+  <h2>Welcome to Productivity Tracker</h2>
+  <h3>Log in here</h3>
+  <form (ngSubmit)="onSubmit()" class="login-form">
+    <div class="form-group">
+      <label for="email">Email</label>
+      <input
+        id="email"
+        type="email"
+        [(ngModel)]="email"
+        name="email"
+        placeholder="Enter your email"
+        required
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="password">Password</label>
+      <input
+        id="password"
+        type="password"
+        [(ngModel)]="password"
+        name="password"
+        placeholder="Enter password"
+        required
+      />
+    </div>
+
+    <div style="padding: 12px">
+      <button mat-raised-button color="primary" type="submit">
+        Log In
+      </button>
+    </div>
+
+    <div *ngIf="loginFailed" class="error-message">
+      Incorrect credentials. Try again.
+    </div>
+  </form>
+
+  <p>
+    Don’t have an account?
+    <a routerLink="/signup">Sign up here</a>
+  </p>
+</div>
