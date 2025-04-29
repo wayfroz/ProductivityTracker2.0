@@ -1,38 +1,51 @@
 <div class="dashboard-wrapper">
   <div class="dashboard-header" style="text-align: center;">
     <h2>Welcome to your Dashboard</h2>
-    <p>Your useful links:</p>
   </div>
 
-  <div class="icon-links">
-    <a href="https://metrostate.learn.minnstate.edu/d2l/login?target=%2fd2l%2flms%2fdropbox%2fuser%2ffolders_list.d2l%3fou%3d6626490%26isprv%3d0&sessionExpired=1" target="_blank" class="app-icon">
-      <!-- <img src="assets/logos/metrostate.png" alt="Metro State" /> -->
+  <div class="affirmation-box">
+    <div>{{ todayAffirmation }}</div>
+ </div>
+
+ <div class="tasks-today-box">
+  <h3>Today's Tasks</h3>
+
+  <ul *ngIf="todayTasks.length > 0; else noTasks">
+    <li *ngFor="let task of todayTasks">
+      📚 {{ task.title }}
+    </li>
+  </ul>
+
+  <ng-template #noTasks>
+    <p>No tasks due today! 🎉</p>
+  </ng-template>
+</div>
+
+
+ <div class="icon-links">
+  <h3>Your useful links:</h3>
+  <div class="links-grid">
+    <a href="https://metrostate.learn.minnstate.edu/d2l/login" target="_blank" class="app-icon">
+      <img src="assets/logos/8384-metro-state-university-logo.svg" alt="Metro State">
       <span>D2L</span>
     </a>
-
+    
     <a href="https://www.youtube.com/" target="_blank" class="app-icon">
-      <!-- <img src="assets/logos/youtube.svg" alt="YouTube" /> -->
+      <img src="assets/logos/youtube.svg" alt="YouTube">
       <span>YouTube</span>
     </a>
-
+    
     <a href="https://open.spotify.com/" target="_blank" class="app-icon">
-      <!-- <img src="assets/logos/spotify.svg" alt="Spotify" /> -->
+      <img src="assets/logos/spotify.svg" alt="Spotify">
       <span>Spotify</span>
     </a>
-
+    
     <a href="https://calendar.google.com/" target="_blank" class="app-icon">
-      <!-- <img src="assets/logos/google-calendar.svg" alt="Google Calendar" /> -->
+      <img src="assets/logos/google-calendar.svg" alt="Google Calendar">
       <span>Calendar</span>
     </a>
-
-    <!-- <a href="https://discord.com/" target="_blank" class="app-icon">
-      <img src="assets/assets/logos/discord.svg" alt="Discord" />
-      <span>Discord</span>
-    </a>
-
-    <a href="https://chat.openai.com/" target="_blank" class="app-icon">
-      <img src="assets/assets/logos/chatgpt.svg" alt="ChatGPT" />
-      <span>ChatGPT</span>
-    </a> -->
+    
   </div>
+</div>
+
 </div>
