@@ -4,7 +4,9 @@ from models.task import Task
 from models.reminder import Reminder
 from database import SessionLocal
 from datetime import datetime
-from schemas import TaskCreateRequest, ReminderCreateRequest, TaskUpdateRequest
+from schemas import TaskCreateRequest, ReminderCreateRequest, TaskUpdateRequest, ReminderResponse
+from typing import List
+
 
 router = APIRouter()
 
@@ -83,3 +85,21 @@ def delete_task(task_id: int, db: Session = Depends(get_db)):
     db.delete(task)
     db.commit()
     return {"message": "Task deleted successfully"}
+
+@router.get("/tasks/reminders/student/{student_id}", response_model=List[ReminderResponse])
+def get_student_reminders(student_id: int, db: Session = Depends(get_db)):
+    results = (
+        db.query(Reminder, Task.title)
+          .join(Task, Reminder.task_id == Task.id)
+          .filter(Task.student_id == student_id)
+          .all()
+    )
+    out = []
+    for rem, title in results:
+        out.append({
+            "id":            rem.id,
+            "task_id":       rem.task_id,
+            "reminder_time": rem.reminder_time.isoformat(),
+            "task_title":    title
+        })
+    return out

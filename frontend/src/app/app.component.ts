@@ -6,6 +6,7 @@ import { MatListModule } from '@angular/material/list';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { MatButton } from '@angular/material/button';
+import { ReminderService }       from './reminder.service';
 
 @Component({
   selector: 'app-root',
@@ -24,10 +25,16 @@ import { MatButton } from '@angular/material/button';
 export class AppComponent {
   showNavbar = true;
 
-  constructor(private router: Router) {
+  constructor(
+    private router: Router,
+    private reminders: ReminderService
+  ) {
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
         this.showNavbar = !event.url.includes('/login');
+        if (!event.url.includes('/login')) {
+          this.reminders.init();
+        }
       }
     });
   }
