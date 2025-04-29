@@ -29,8 +29,8 @@ export class LoginComponent {
     };
 
     this.auth.login(payload).subscribe({
-      next: () => {
-        localStorage.setItem('student_id', '1');
+      next: (res: { message: string; id: number; email: string }) => {
+        localStorage.setItem('student_id', res.id.toString());
         this.router.navigate(['/dashboard']);
       },
       error: () => {

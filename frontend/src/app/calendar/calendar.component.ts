@@ -9,6 +9,13 @@ import { TaskModalComponent } from '../task-modal/task-modal.component';
 import { RouterLink } from '@angular/router';
 import { HttpClient, provideHttpClient } from '@angular/common/http';
 
+interface RawTask {
+  id:         number;
+  title:      string;
+  due_date:   string;
+  student_id: number;
+}
+
 @Component({
   selector: 'app-calendar',
   standalone: true,
@@ -144,12 +151,18 @@ export class CalendarComponent implements OnInit {
     );
   }
 
-  fetchTasks() {
-    this.http.get<any[]>('http://localhost:8000/tasks/student/1')
-      .subscribe(tasks => {
-        this.allTasks = tasks;
-      });
+  fetchTasks(): void {
+  const raw = localStorage.getItem('student_id');
+  const id  = raw ? +raw : 0;
+  if (!id) {
+    console.warn('No student logged in; skipping fetch');
+    return;
   }
+
+  this.http
+    .get<RawTask[]>(`http://localhost:8000/tasks/student/${id}`)
+    .subscribe(tasks => this.allTasks = tasks);
+}
 
   getTasksForDate(date: Date | null): string[] {
     if (!date) return [];

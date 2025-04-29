@@ -1,45 +1,55 @@
-import { Component } from '@angular/core';
-import { HttpClient, provideHttpClient } from '@angular/common/http';
-import { Router } from '@angular/router';
-import { FormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
+import { HttpClient }        from '@angular/common/http';
+import { Router }            from '@angular/router';
+import { CommonModule }      from '@angular/common';
+import { FormsModule }       from '@angular/forms';
 
 @Component({
-  selector: 'app-tasks',
-  standalone: true,
-  imports: [
-    CommonModule,
-    FormsModule,
-  ],
+  selector:    'app-tasks',
+  standalone:  true,
+  imports:    [CommonModule, FormsModule],
   templateUrl: './tasks.component.html',
-  styleUrls: ['./tasks.component.scss']
+  styleUrls:   ['./tasks.component.scss']
 })
-
-export class TasksComponent {
+export class TasksComponent implements OnInit {
   tasks = {
-    title: '',
-    date: '',
-    student_id: 1 // Replace with real auth ID later
+    title:      '',
+    date:       '',
+    student_id: 0
   };
 
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(
+    private http:   HttpClient,
+    private router: Router
+  ) {}
 
-  onSubmit() {
+  ngOnInit(): void {
+    const raw = localStorage.getItem('student_id');
+    const id  = raw ? +raw : 0;
+
+    if (!id) {
+      this.router.navigate(['/login']);
+      return;
+    }
+
+    this.tasks.student_id = id;
+  }
+
+  onSubmit(): void {
     const payload = {
-      title: this.tasks.title,
-      due_date: this.tasks.date,
+      title:      this.tasks.title,
+      due_date:   this.tasks.date,
       student_id: this.tasks.student_id
     };
 
-    this.http.post('http://localhost:8000/tasks', payload)
-      .subscribe(
-        (response) => {
-          console.log('Task added:', response);
+    this.http
+      .post('http://localhost:8000/tasks', payload)
+      .subscribe({
+        next: () => {
+          console.log('Task added:', payload);
           this.router.navigate(['/calendar']);
         },
-        (error) => {
-          console.error('Error adding task:', error);
-        }
-      );
+        error: err => console.error('Error adding task:', err)
+      });
   }
 }
