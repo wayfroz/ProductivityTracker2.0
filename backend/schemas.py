@@ -26,3 +26,13 @@ class TaskUpdateRequest(BaseModel):
 # Reminder creation schema
 class ReminderCreateRequest(BaseModel):
     reminder_time: datetime
+
+# Response schema for student‐wide reminder
+class ReminderResponse(BaseModel):
+    id:            int
+    task_id:       int
+    reminder_time: datetime
+    task_title:    str
+
+    class Config:
+        orm_mode = True
