@@ -111,3 +111,14 @@
   flex: 0 0 auto;
   margin-left: 0.5rem;
 }
+
+.calendar-day .task-list {
+  max-height: 120px;
+  overflow-y: auto;
+}
+
+.calendar-day .task-list li button.mat-icon-button mat-icon {
+  flex: 0 0 auto;
+  padding: 4px;
+  font-size: 16px;
+}
