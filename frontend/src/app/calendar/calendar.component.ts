@@ -176,59 +176,68 @@ export class CalendarComponent implements OnInit {
       });
   }
   
-  addTask(existingTask?: { date: Date; task: string }, index?: number) {
-    const dialogRef = this.dialog.open(TaskModalComponent, {
-      data: existingTask ? {
-        title: existingTask.task,
-        date: existingTask.date.toISOString().split('T')[0],
-        time: existingTask.date.toTimeString().slice(0, 5),
-      } : null
-    });
+  addTask() {
+    const ref = this.dialog.open(TaskModalComponent, { data: null });
+    ref.afterClosed().subscribe((result: any) => {
+      if (!result) return;
+      const sid = +localStorage.getItem('student_id')!;
 
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result) {
-        const newTask = {
-          date: result.date,
-          task: result.title,
-        };
-        if (index !== undefined) {
-          this.tasks[index] = newTask;
-        } else {
-          this.tasks.push(newTask);
-        }
-      }
+      this.http
+        .post<RawTask>('http://localhost:8000/tasks', {
+          title:      result.title,
+          due_date:   result.date,
+          student_id: sid
+        })
+        .subscribe(created => {
+          this.http
+            .post(
+              `http://localhost:8000/tasks/${created.id}/reminders`,
+              { reminder_time: result.reminderTime }
+            )
+            .subscribe(() => this.fetchTasks());
+        });
     });
   }
 
   
-  onTaskClick(date: Date, taskTitle: string, index: number) {
-    const matchingTask = this.allTasks.find(t => {
-      const taskDate = new Date(t.due_date);
-      return (
-        taskDate.getFullYear() === date.getFullYear() &&
-        taskDate.getMonth() === date.getMonth() &&
-        taskDate.getDate() === date.getDate() &&
-        t.title === taskTitle
-      );
-    });
-  
-    if (matchingTask) {
-      const dialogRef = this.dialog.open(TaskModalComponent, {
-        data: {
-          id: matchingTask.id,
-          title: matchingTask.title,
-          due_date: matchingTask.due_date
-        }
+  onTaskClick(date: Date, taskTitle: string) {
+    const match = this.allTasks.find(t =>
+      new Date(t.due_date).toDateString() === date.toDateString() &&
+      t.title === taskTitle
+    );
+    if (!match) return;
+    this.http
+      .get<any[]>(`http://localhost:8000/tasks/${match.id}/reminders`)
+      .subscribe(rems => {
+        const existing = rems[0]?.reminder_time;
+        const ref = this.dialog.open(TaskModalComponent, {
+          data: {
+            id:            match.id,
+            title:         match.title,
+            due_date:      match.due_date,
+            reminder_time: existing
+          }
+        });
+
+        ref.afterClosed().subscribe((result: any) => {
+          if (!result) return;
+
+          this.http
+            .put(`http://localhost:8000/tasks/${match.id}`, {
+              title:    result.title,
+              due_date: result.date
+            })
+            .subscribe(() => {
+              this.http
+                .post(
+                  `http://localhost:8000/tasks/${match.id}/reminders`,
+                  { reminder_time: result.reminderTime }
+                )
+                .subscribe(() => this.fetchTasks());
+            });
+        });
       });
-  
-      dialogRef.afterClosed().subscribe((updatedData) => {
-        if (updatedData) {
-          this.updateTask(updatedData);
-        }
-      });
-    }
   }
-  
 
   updateTask(updatedTask: any) {
     this.http.put(`http://localhost:8000/tasks/${updatedTask.id}`, {

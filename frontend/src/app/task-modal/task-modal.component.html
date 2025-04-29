@@ -10,6 +10,11 @@
     <mat-label>Date</mat-label>
     <input matInput [(ngModel)]="date" type="date" required />
   </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Reminder Time</mat-label>
+    <input matInput [(ngModel)]="reminderTime" type="datetime-local" required />
+  </mat-form-field>
 </mat-dialog-content>
 
 <mat-dialog-actions>

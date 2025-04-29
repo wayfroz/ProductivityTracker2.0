@@ -4,6 +4,8 @@ import { Router }            from '@angular/router';
 import { CommonModule }      from '@angular/common';
 import { FormsModule }       from '@angular/forms';
 
+interface RawTask { id: number; }
+
 @Component({
   selector:    'app-tasks',
   standalone:  true,
@@ -15,6 +17,7 @@ export class TasksComponent implements OnInit {
   tasks = {
     title:      '',
     date:       '',
+    reminderTime: '',
     student_id: 0
   };
 
@@ -43,13 +46,22 @@ export class TasksComponent implements OnInit {
     };
 
     this.http
-      .post('http://localhost:8000/tasks', payload)
+      .post<RawTask>('http://localhost:8000/tasks', payload)
       .subscribe({
-        next: () => {
-          console.log('Task added:', payload);
-          this.router.navigate(['/calendar']);
-        },
-        error: err => console.error('Error adding task:', err)
+        next: task => {
+          this.http
+            .post(
+              `http://localhost:8000/tasks/${task.id}/reminders`,
+              { reminder_time: this.tasks.reminderTime }
+            )
+          .subscribe({
+            next: () => {
+              console.log('Task added:', payload);
+              this.router.navigate(['/calendar']);
+            },
+            error: err => console.error('Error adding task:', err)
+          });
+        }
       });
   }
 }

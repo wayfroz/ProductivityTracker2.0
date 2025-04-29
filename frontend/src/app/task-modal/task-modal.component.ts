@@ -21,6 +21,7 @@ import { MatButtonModule } from '@angular/material/button'; // Correct import
 export class TaskModalComponent {
   title: string = '';
   date: string = '';
+  reminderTime: string = '';
 
   constructor(
     public dialogRef: MatDialogRef<TaskModalComponent>,
@@ -31,6 +32,7 @@ export class TaskModalComponent {
     if (this.data) {
       this.title = this.data.title || '';
       this.date = this.data.due_date ? new Date(this.data.due_date).toISOString().substring(0, 10) : '';
+      this.reminderTime = this.data.reminder_time ? this.data.reminder_time.substring(0,16) : '';
     }
   }
 
@@ -38,7 +40,8 @@ export class TaskModalComponent {
     const task = {
       title: this.title,
       date: new Date(this.date),
-      id: this.data?.id // Keep the ID so we know what to update
+      id: this.data?.id, // Keep the ID so we know what to update
+      reminderTime: this.reminderTime
     };
     this.dialogRef.close(task);
   }
