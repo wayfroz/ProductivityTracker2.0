@@ -158,7 +158,6 @@ export class CalendarComponent implements OnInit {
     console.warn('No student logged in; skipping fetch');
     return;
   }
-
   this.http
     .get<RawTask[]>(`http://localhost:8000/tasks/student/${id}`)
     .subscribe(tasks => this.allTasks = tasks);
@@ -176,7 +175,6 @@ export class CalendarComponent implements OnInit {
         );
       });
   }
-  
   
   addTask(existingTask?: { date: Date; task: string }, index?: number) {
     const dialogRef = this.dialog.open(TaskModalComponent, {
