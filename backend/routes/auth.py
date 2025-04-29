@@ -31,5 +31,6 @@ def login(user: LoginRequest, db: Session = Depends(get_db)):
     return {
         "message": "Login successful",
         "id": student.id,
-        "email": student.email
+        "email": student.email,
+        "name": student.name
         }
