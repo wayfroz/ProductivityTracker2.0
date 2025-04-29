@@ -28,4 +28,8 @@ def login(user: LoginRequest, db: Session = Depends(get_db)):
     student = db.query(Student).filter(Student.email == user.email).first()
     if not student or student.password != user.password:
         raise HTTPException(status_code=401, detail="Invalid credentials")
-    return {"message": "Login successful"}
+    return {
+        "message": "Login successful",
+        "id": student.id,
+        "email": student.email
+        }
