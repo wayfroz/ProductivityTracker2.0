@@ -32,7 +32,7 @@ interface RawTask {
 })
 
 export class CalendarComponent implements OnInit {
-  allTasks: any[] = [];
+  allTasks: RawTask[] = [];
   tasks: { date: Date; task: string }[] = [];
 
   constructor(
@@ -162,24 +162,22 @@ export class CalendarComponent implements OnInit {
   this.http
     .get<RawTask[]>(`http://localhost:8000/tasks/student/${id}`)
     .subscribe(tasks => this.allTasks = tasks);
-}
+  }
 
-  getTasksForDate(date: Date | null): string[] {
+  getTasksForDate(date: Date | null): RawTask[] {
     if (!date) return [];
-  
     return this.allTasks
       .filter(task => {
         const taskDate = new Date(task.due_date);
         return (
           taskDate.getFullYear() === date.getFullYear() &&
-          taskDate.getMonth() === date.getMonth() &&
-          taskDate.getDate() === date.getDate()
+          taskDate.getMonth()    === date.getMonth()    &&
+          taskDate.getDate()     === date.getDate()
         );
-      })
-      .map(task => task.title);
+      });
   }
   
-
+  
   addTask(existingTask?: { date: Date; task: string }, index?: number) {
     const dialogRef = this.dialog.open(TaskModalComponent, {
       data: existingTask ? {
@@ -242,5 +240,15 @@ export class CalendarComponent implements OnInit {
       console.log('Task updated successfully');
       this.fetchTasks(); // Reload tasks after updating
     });
-  }  
+  }
+
+
+  deleteTask(taskId: number): void {
+    this.http
+      .delete(`http://localhost:8000/tasks/${taskId}`)
+      .subscribe({
+        next: () => this.fetchTasks(), 
+        error: err => console.error('Error deleting task', err)
+      });
+  }
 }

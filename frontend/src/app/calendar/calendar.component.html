@@ -37,9 +37,12 @@
           <ng-container *ngIf="day.date">
             <ul class="task-list">
               <li *ngFor="let task of getTasksForDate(day.date); let i = index">
-                <span>{{ task }}</span> 
-                <button mat-icon-button color="accent" (click)="onTaskClick(day.date!, task, i)" aria-label="Edit Task">
+                <span class="task-title">{{ task.title }}</span> 
+                <button mat-icon-button color="accent" (click)="onTaskClick(day.date!, task.title, i)" aria-label="Edit Task">
                   <mat-icon>edit</mat-icon>
+                </button>
+                <button mat-icon-button color="warn" (click)="deleteTask(task.id)" aria-label="Delete Task">
+                  <mat-icon>delete</mat-icon>
                 </button>
               </li>
             </ul> 
@@ -64,10 +67,13 @@
         <ul class="task-list">
           <li *ngFor="let task of getTasksForDate(day.date); let i = index">
             <ng-container *ngIf="task">
-              <span>{{ task }}</span>
-              <button mat-icon-button color="accent" (click)="onTaskClick(day.date, task, i)" aria-label="Edit Task">
+              <span class="task-title">{{ task.title }}</span>
+              <button mat-icon-button color="accent" (click)="onTaskClick(day.date, task.title, i)" aria-label="Edit Task">
                 <mat-icon>edit</mat-icon>
               </button>
+              <button mat-icon-button color="warn" (click)="deleteTask(task.id)" aria-label="Delete Task">
+                  <mat-icon>delete</mat-icon>
+                </button>
             </ng-container>
           </li>
         </ul>
